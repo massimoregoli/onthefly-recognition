@@ -68,7 +68,8 @@ private:
 	BufferedPort<Bottle>                port_in_scores;
 
 	//output
-	Port                                port_out_confidence;
+    Port                                port_out_confidence;
+    BufferedPort<Bottle>                port_out_avg_scores;
 
 	int                                 buffer_size;
 	list<Bottle>                        scores_buffer;
