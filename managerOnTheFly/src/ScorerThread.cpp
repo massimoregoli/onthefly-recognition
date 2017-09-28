@@ -63,7 +63,6 @@ void ScorerThread::run()
 	Bottle *bot=port_in_scores.read(false);
 
     Bottle& avg_scores_bot = port_out_avg_scores.prepare();
-    avg_scores_bot.clear();
 
 
 	if (bot==NULL)
@@ -76,8 +75,8 @@ void ScorerThread::run()
             draw_hist(no_votes);
         }
 
-        avg_scores_bot.addInt(0);
-        port_out_avg_scores.write();
+        //avg_scores_bot.addInt(0);
+        //port_out_avg_scores.write();
 
         mutex.post();
 		return;
@@ -88,8 +87,8 @@ void ScorerThread::run()
 	{
         std::cout << "Undefined reply from classifier: empty bottle of scores!" << std::endl;
 
-        avg_scores_bot.addInt(0);
-        port_out_avg_scores.write();
+        //avg_scores_bot.addInt(0);
+        //port_out_avg_scores.write();
 
         mutex.post();
 		return;
@@ -111,8 +110,8 @@ void ScorerThread::run()
 	{
 		std::cout << "There is a problem with buffer_size in streaming mode." << std::endl;
 
-        avg_scores_bot.addInt(0);
-        port_out_avg_scores.write();
+        //avg_scores_bot.addInt(0);
+        //port_out_avg_scores.write();
 
         mutex.post();
 		return;
@@ -158,10 +157,12 @@ void ScorerThread::run()
 		}
 	}
 
+    avg_scores_bot.clear();
     avg_scores_bot.addInt(n_classes);
     for (int class_idx = 0; class_idx < n_classes; class_idx++){
         avg_scores_bot.addDouble(class_avg[class_idx]);
     }
+
     port_out_avg_scores.write();
 
 	predicted_class = scores_buffer.front().get(max_avg_idx).asList()->get(0).asString().c_str();
